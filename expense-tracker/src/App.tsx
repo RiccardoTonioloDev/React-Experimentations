@@ -1,6 +1,7 @@
 import React from 'react';
 import Expenses from './components/Expenses/Expenses';
 import { Expense } from './types/Expense';
+import NewExpense from './components/NewExpense/NewExpense';
 
 const App: React.FC = () => {
     const expenses: Expense[] = [
@@ -30,9 +31,13 @@ const App: React.FC = () => {
         },
     ];
 
+    const addExpenseHandler = (expense: Expense) => {
+        console.log('In App.js', expense);
+    };
+
     return (
         <div className="App">
-            <h2>Hello</h2>
+            <NewExpense onAddExpense={addExpenseHandler} />
             <Expenses items={expenses} />
         </div>
     );
