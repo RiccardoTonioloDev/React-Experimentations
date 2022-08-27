@@ -3,6 +3,7 @@ import './ExpenseForm.css';
 import { Expense } from '../../types/Expense';
 
 type propsExpenseForm = {
+    onCancel: () => void;
     onSaveExpenseData: (enteredExpenseData: Expense) => void;
 };
 
@@ -38,6 +39,7 @@ const ExpenseForm: React.FC<propsExpenseForm> = (props) => {
         setEnteredTitle('');
         setEnteredAmount('');
         setEnteredDate('');
+        props.onCancel();
     };
 
     return (
@@ -72,6 +74,9 @@ const ExpenseForm: React.FC<propsExpenseForm> = (props) => {
                     />
                 </div>
                 <div className="new-expense__actions">
+                    <button type="button" onClick={props.onCancel}>
+                        Cancel
+                    </button>
                     <button type="submit">Add Expense</button>
                 </div>
             </div>

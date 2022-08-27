@@ -2,7 +2,7 @@ import React, { ReactComponentElement } from 'react';
 import './Card.css';
 
 type propsCard = {
-    children: ReactComponentElement<any>[];
+    children: ReactComponentElement<any | ReactComponentElement<any>[]>[];
     className: string;
 };
 
