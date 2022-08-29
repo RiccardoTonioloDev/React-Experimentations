@@ -1,12 +1,7 @@
 import classes from './MealItem.module.css';
 import MealItemForm from './MealItemForm';
 
-type MealItemProps = {
-    title: string;
-    description: string;
-    price: number;
-    id: string;
-};
+interface MealItemProps extends Item {}
 
 const MealItem = (props: MealItemProps) => {
     const price = `$${props.price.toFixed(2)}`;
