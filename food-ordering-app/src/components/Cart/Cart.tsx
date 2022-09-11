@@ -1,16 +1,18 @@
 import classes from './Cart.module.css';
 import Modal from '../UI/Modal';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import CartContext, {
     CartItem as CartItemInterface,
 } from '../../store/cart-context';
 import CartItem from './CartItem';
+import Checkout from './Checkout';
 
 type CartProps = {
     onClose: () => void;
 };
 
 const Cart = (props: CartProps) => {
+    const [isCheckout, setIsCheckout] = useState(false);
     const cartCtx = useContext(CartContext);
 
     const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
@@ -21,6 +23,10 @@ const Cart = (props: CartProps) => {
     };
     const cartItemAddHandler = (item: CartItemInterface) => {
         cartCtx.addItem({ ...item, amount: 1 });
+    };
+
+    const orderHandler = () => {
+        setIsCheckout(true);
     };
 
     const cartItems = (
@@ -40,6 +46,19 @@ const Cart = (props: CartProps) => {
         </ul>
     );
 
+    const modalActions = (
+        <div className={classes.actions}>
+            <button onClick={props.onClose} className={classes['button--alt']}>
+                Close
+            </button>
+            {hasItems && (
+                <button className={classes.button} onClick={orderHandler}>
+                    Order
+                </button>
+            )}
+        </div>
+    );
+
     return (
         <Modal onClick={props.onClose}>
             {cartItems}
@@ -47,15 +66,8 @@ const Cart = (props: CartProps) => {
                 <span>Total Amount</span>
                 <span>{totalAmount}</span>
             </div>
-            <div className={classes.actions}>
-                <button
-                    onClick={props.onClose}
-                    className={classes['button--alt']}
-                >
-                    Close
-                </button>
-                {hasItems && <button className={classes.button}>Order</button>}
-            </div>
+            {isCheckout && <Checkout onCancel={props.onClose} />}
+            {!isCheckout && modalActions}
         </Modal>
     );
 };
