@@ -7,12 +7,14 @@ export interface CartItem extends Item {
 interface CartTypeContext extends CartType {
     addItem: (item: CartItem) => void;
     removeItem: (item: CartItem) => void;
+    clearCart: () => void;
 }
 const CartContext = React.createContext({
     items: [],
     totalAmount: 0,
     addItem: (item) => {},
     removeItem: (item) => {},
+    clearCart: () => {},
 } as CartTypeContext);
 
 export default CartContext;

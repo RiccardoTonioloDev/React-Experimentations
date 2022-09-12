@@ -10,14 +10,15 @@ const AvailableMeals = () => {
 
     useEffect(() => {
         const fetchMeals = async () => {
-            const response = await fetch('INSERT_FIREBASE_KEY_HERE');
+            const response = await fetch(
+                'INSERT_FIREBASE_API_KEY_HERE/meals.json'
+            );
 
             if (!response.ok) {
                 throw new Error('Something went wrong.');
             }
 
             const responseData = await response.json();
-            console.log(responseData);
             const loadedMeals: Array<Item> = [];
             for (const key in responseData) {
                 loadedMeals.push({
