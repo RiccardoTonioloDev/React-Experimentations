@@ -1,22 +1,7 @@
 import MeetupList from '../components/meetups/MeetupList';
 import { MeetupItemType } from '../components/meetups/MeetupItem';
-import { GetServerSidePropsContext } from 'next';
-const DUMMY_MEETUPS: MeetupItemType[] = [
-    {
-        id: 'm1',
-        title: 'First meetup',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Roma_dall%27aereo.JPG',
-        address: 'Rome, Italy',
-        description: 'A cool meetup!',
-    },
-    {
-        id: 'm2',
-        title: 'Second meetup',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Roma_dall%27aereo.JPG',
-        address: 'Rome, Italy',
-        description: 'A really really cool meetup!',
-    },
-];
+import { MongoClient } from 'mongodb';
+import Head from 'next/head';
 
 type HomePageProps = {
     meetups: MeetupItemType[];
@@ -24,9 +9,13 @@ type HomePageProps = {
 
 function HomePage(props: HomePageProps) {
     return (
-        <h1>
+        <>
+            <Head>
+                <title>React Meetups</title>
+                <meta name="description" content="Browse a list of meetups!" />
+            </Head>
             <MeetupList meetups={props.meetups} />
-        </h1>
+        </>
     );
 }
 
@@ -44,11 +33,26 @@ function HomePage(props: HomePageProps) {
 
 export async function getStaticProps() {
     //Fetch data from API
+    const client = await MongoClient.connect(
+        `mongodb+srv://RiccardoToniolo:${process.env.MONGO_PASSWORD}@cluster0.wpbzy.mongodb.net/meetups?retryWrites=true&w=majority`
+    );
+    const db = client.db();
+    const meetupsCollection = db.collection('meetups');
+    const meetups = await meetupsCollection.find().toArray();
+    client.close();
     return {
         props: {
-            meetups: DUMMY_MEETUPS,
+            meetups: meetups.map((meetup) => {
+                return {
+                    id: meetup._id.toString(),
+                    title: meetup.title,
+                    address: meetup.address,
+                    image: meetup.image,
+                    description: meetup.description,
+                };
+            }),
         },
-        revalidate: 10,
+        revalidate: 1,
     };
 }
 
